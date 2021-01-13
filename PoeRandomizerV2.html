@@ -1,0 +1,171 @@
+
+<html>
+    <head>
+        <title id="TITLE">
+            Path of Exile Random Build Selector
+        </title>
+        <style>
+            .collapsible{
+                background-color: #777;
+                color: white;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                border: none;
+                text-align: center;
+                outline: none;
+                font-size: 15px;
+            }
+            
+            .active, .collapsible:hover {
+                background-color: #666;
+            }
+            
+            .content {
+                display: none;
+                overflow: hidden;
+            }
+            
+            .centered {
+                text-align: center;
+            }
+            
+            .disable-select {
+                user-select: none; /* supported by Chrome and Opera */
+               -webkit-user-select: none; /* Safari */
+               -khtml-user-select: none; /* Konqueror HTML */
+               -moz-user-select: none; /* Firefox */
+               -ms-user-select: none; /* Internet Explorer/Edge */
+            }
+        </style>
+    </head>
+    <body>
+    
+        <section id = result class = 'disable-select centered'>
+            Push the Button
+        </section><br>
+        <section id='description'></section>
+        
+        <div class='centered disable-select'><button type='button' onclick='rollBuild()'>Here</button></div>
+        <div><br></div>
+        
+        <button type='button' class='collapsible disable-select' onclick='mineShaft(this)'>Class Options</button>
+        <div class='content disable-select centered'>
+            <br>
+            <div id='classList'>Marauder, Templar, Witch, Shadow, Ranger, Duelist, Scion</div>
+        </div>
+        <div><br></div>
+        
+        <button type='button' class='collapsible disable-select' onclick='mineShaft(this)'>Build Options</button>
+        <div class='content disable-select centered'>
+            <br>
+            <div id='buildList'>Marauder, Templar, Witch, Shadow, Ranger, Duelist, Scion</div>
+        </div>
+        <div><br></div>
+        
+        <button type='reset' class='disable-select' onclick='resetPage()'>Reset</button>
+        <pre id='History'></pre>
+    </body>
+    
+</html>
+
+<script>
+    
+    classTable = ['Marauder', 'Templar', 'Witch', 'Shadow', 'Ranger', 'Duelist', 'Scion'];
+    buildTable = ['Melee', 'Totem/Brand', 'Bow/Wand', 'Spell/Minion', 'Trap/Mine', 'Triggers'];
+    //optionTable = ['Split Totems and Brands', 'Split Bows and Wands', 'Split off Minions', 'Split Traps and Mines'];
+    
+    function randomized(num){
+        return Math.floor((Math.random()*num));
+    }
+    
+    function rollBuild(){
+        var result;
+        var activeBuildTable = [];
+        var activeClassTable = [];
+        
+        var i = 0;
+        for(var j = 0; j < classTable.length; j++){
+            if(document.getElementById(classTable[j]).checked == true){
+                activeClassTable[i] = classTable[j];
+                i++;
+            }
+        }
+        
+        i = 0;
+        for(var j = 0; j < buildTable.length; j++){
+            if(document.getElementById(buildTable[j]).checked == true){
+                activeBuildTable[i] = buildTable[j];
+                i++;
+            }
+        }
+        
+        if(activeBuildTable.length == 0 || activeClassTable == 0){
+            result = 'Set some options, dummy!';
+        } else{
+            resultBuild = activeBuildTable[randomized(activeBuildTable.length)];
+            resultClass = activeClassTable[randomized(activeClassTable.length)];
+            result = resultBuild + ' ' + resultClass;
+        }
+        
+        document.getElementById('result').innerHTML = result;
+        document.getElementById('History').appendChild(document.createTextNode(result+'\n'));
+    }
+    
+  
+    function createCheckBox(name, place, on){
+        var x = document.createElement('input');
+        x.setAttribute("type", "checkbox");
+        if(on == true){x.setAttribute('checked', true);} else{}
+        x.setAttribute("id", name);
+        document.getElementById(place).appendChild(x);
+        
+        var y = document.createElement('label');
+        y.setAttribute('for', name);
+        y.appendChild(document.createTextNode(name));
+        document.getElementById(place).appendChild(y);
+    }
+    
+    function mineShaft(element){
+        element.classList.toggle('active');
+        element = element.nextElementSibling;
+        if (element.style.display === "block") {
+            element.style.display = "none";
+        } else {
+            element.style.display = "block";
+        }
+    }
+    
+    function resetPage(){
+        document.getElementById('result').innerHTML = 'Push the Button';
+        document.getElementById('description').innerHTML = '';
+        document.getElementById('History').innerHTML = '';
+        
+        for(var i = 0; i < classTable.length; i++){
+            document.getElementById(classTable[i]).checked = true;
+        }
+        
+        for(var i = 0; i < buildTable.length; i++){
+            document.getElementById(buildTable[i]).checked = true;
+        }
+    }
+    
+    function initialize(){
+        document.getElementById('classList').innerHTML = '';
+        document.getElementById('buildList').innerHTML = '';
+        document.getElementById('result').innerHTML = 'Push the Button';
+        document.getElementById('description').innerHTML = '';
+        document.getElementById('History').innerHTML = '';
+        
+        for(var i = 0; i < classTable.length; i++){  
+            createCheckBox(classTable[i], 'classList', true);
+        }
+        
+        for(var i = 0; i < buildTable.length; i++){  
+            createCheckBox(buildTable[i], 'buildList', true);
+        }
+    }
+    
+    initialize();
+
+</script>
